@@ -1,4 +1,4 @@
-package com.finch.game.States;
+package com.finch.game.states;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 

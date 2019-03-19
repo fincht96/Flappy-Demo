@@ -1,4 +1,4 @@
-package com.finch.game.States;
+package com.finch.game.states;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -27,5 +27,6 @@ public abstract class State {
     public abstract void handleInput();
     public abstract void update(float dt);
     public abstract void render(SpriteBatch sB);
+    public abstract void dispose();
 
 }
