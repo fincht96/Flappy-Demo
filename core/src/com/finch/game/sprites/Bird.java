@@ -3,6 +3,7 @@ package com.finch.game.sprites;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector3;
+import com.finch.game.FlappyDemo;
 
 
 /**
@@ -30,16 +31,31 @@ public class Bird {
         mPosition = new Vector3(x,y,0);
         mVelocity = new Vector3(0,0,0);
         mBird = new Texture("bird.png");
+
+
     }
 
     public void update(float dt)
     {
+        if(mPosition.y > 0)
+        {
             mVelocity.add(0,sGRAVITY,0);       // y velocity increased by gravity
-            mVelocity.scl(dt);                       // multiples all components by dt
-            mPosition.add(0,mVelocity.y,0);    // adds distance (gravity*dt) to y
-            mVelocity.scl(1/dt);                    // converts distance back to velocity
+        }
+
+        mVelocity.scl(dt);                       // multiples all components by dt
+        mPosition.add(0,mVelocity.y,0);    // adds distance (gravity*dt) to y
+        mVelocity.scl(1/dt);                    // converts distance back to velocity
+
+        if(mPosition.y < 0)
+        {
+            mPosition.y = 0;
+        }
     }
 
 
+    public void jump()
+    {
+        mVelocity.y = 250;
+    }
 
 }
