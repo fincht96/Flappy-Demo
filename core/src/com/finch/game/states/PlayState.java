@@ -30,11 +30,10 @@ public class PlayState extends State {
         mBird = new Bird(50,300);
         mCam.setToOrtho(false, FlappyDemo.sWIDTH/2,FlappyDemo.sHEIGHT/2);
         mBg = new Texture("bg.png");
-        //mTube = new Tube(120);
+        mTube = new Tube(120);
 
 
-        topTubeTexture = new Texture("toptube.png");
-        topTubePos = new Vector2(100, 120);
+
 
     }
 
@@ -59,9 +58,8 @@ public class PlayState extends State {
         sB.begin();
         sB.draw(mBg, (mCam.position.x - mCam.viewportWidth/2), 0);      // y = 0 is bottom left hand corner
         sB.draw(mBird.getTexture(), mBird.getPosition().x, mBird.getPosition().y);
-        //sB.draw(mTube.getTopTube(), mTube.getPosTopTube().x, mTube.getPosTopTube().y);
-        //sB.draw(mTube.getBotTube(), mTube.getPosBotTube().x, mTube.getPosBotTube().y);
-        sB.draw(topTubeTexture, topTubePos.x, topTubePos.y);
+        sB.draw(mTube.getTopTube(), mTube.getPosTopTube().x, mTube.getPosTopTube().y);
+       sB.draw(mTube.getBotTube(), mTube.getPosBotTube().x, mTube.getPosBotTube().y);
         sB.end();
     }
 

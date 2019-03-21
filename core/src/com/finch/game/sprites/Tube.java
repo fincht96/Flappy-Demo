@@ -24,8 +24,10 @@ public class Tube {
         mBotTube = new Texture("bottomtube.png");
         mRand = new Random();
 
-        mPosBotTube = new Vector2(x, mRand.nextInt(FLUCTUATION) + TUBE_GAP + LOWEST_OPENING);
-        mPosTopTube = new Vector2(x, mPosBotTube.y - TUBE_GAP - mBotTube.getHeight());
+        mPosBotTube = new Vector2(x, -(mRand.nextInt(FLUCTUATION) + TUBE_GAP + LOWEST_OPENING));
+        mPosTopTube = new Vector2(x, mPosBotTube.y + TUBE_GAP + mBotTube.getHeight());
+        //mPosTopTube = new Vector2(x, 100);
+        //mPosTopTube = new Vector2(x, mPosBotTube.y - TUBE_GAP - mBotTube.getHeight());
     }
 
     public Texture getTopTube() {
