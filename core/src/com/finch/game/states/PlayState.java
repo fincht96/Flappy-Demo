@@ -67,7 +67,7 @@ public class PlayState extends State {
         mBird.update(dt);
         
         
-        
+        if(TimeUtils.millis() - prevTubeSpawnTime > 3000) spawnTube();
     
         
         
@@ -77,17 +77,7 @@ public class PlayState extends State {
             //raindrop.y -= 200 * Gdx.graphics.getDeltaTime();
             //tube.x -= ;
             
-            float tubeHorizontalVel = 200;
-            
-            
-            
-            
-            	
-            if(TimeUtils.millis() - prevTubeSpawnTime > 3000) spawnTube();
-            
-            
-            
-            tube.translateHorizontally(-tubeHorizontalVel * Gdx.graphics.getDeltaTime());
+            tube.translateHorizontally(-200 * Gdx.graphics.getDeltaTime());
             
            // if(raindrop.y + 64 < 0) iter.remove();
             if(tube.getBotTube().x + tube.getBotTube().width < 0) iter.remove();
@@ -99,7 +89,7 @@ public class PlayState extends State {
             
             if(mBird.overlaps(tube.getBotTube()) || mBird.overlaps(tube.getTopTube()))
             {
-            	
+            	System.out.println("Collision!!!");
             }
             
             

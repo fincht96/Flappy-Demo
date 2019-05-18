@@ -71,7 +71,7 @@ public class Tube{
     	return topTube;
     }
     
-    
+
     public Sprite getBotTube()
     {
     	return botTube;
