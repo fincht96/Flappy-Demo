@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.finch.game.states.GameStateManager;
 import com.finch.game.states.MenuState;
+import com.finch.game.states.PlayState;
 
 public class FlappyDemo extends ApplicationAdapter {
 
@@ -21,8 +22,8 @@ public class FlappyDemo extends ApplicationAdapter {
 	public void create () {
 		mSb = new SpriteBatch();
 		mGsm = new GameStateManager();
-		Gdx.gl.glClearColor(1, 0, 0, 1);
-		mGsm.push(new MenuState(mGsm));
+		Gdx.gl.glClearColor(1, 1, 1, 1);
+		mGsm.push(new PlayState(mGsm));
 	}
 
 	@Override

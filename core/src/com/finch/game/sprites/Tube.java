@@ -1,7 +1,10 @@
 package com.finch.game.sprites;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.finch.game.FlappyDemo;
 
 import java.util.Random;
 
@@ -9,27 +12,49 @@ import java.util.Random;
  *  Created by Thomas on 20/03/2019
  */
 
-public class Tube {
-    private static final int FLUCTUATION = 130;
-    private static final int TUBE_GAP = 100;
-    private static final int LOWEST_OPENING = 120;
+public class Tube{
+
+	
     private Texture mTopTube, mBotTube;
     private Vector2 mPosTopTube, mPosBotTube;
-    private Random mRand;
+    
+    private Vector2 mSizeTopTube, mSizeBotTube;
 
 
     public Tube(float x)
     {
-        mTopTube = new Texture("toptube.png");
-        mBotTube = new Texture("bottomtube.png");
-        mRand = new Random();
+        mTopTube = new Texture("tube.png");
+        mBotTube = new Texture("tube.png");
+     
 
-        mPosBotTube = new Vector2(x, -(mRand.nextInt(FLUCTUATION) + TUBE_GAP + LOWEST_OPENING));
-        mPosTopTube = new Vector2(x, mPosBotTube.y + TUBE_GAP + mBotTube.getHeight());
-        //mPosTopTube = new Vector2(x, 100);
-        //mPosTopTube = new Vector2(x, mPosBotTube.y - TUBE_GAP - mBotTube.getHeight());
+        
+        
+        int minTubeHeight = 50;
+
+        int screenHeight = FlappyDemo.sHEIGHT;
+        int gap = MathUtils.random(Bird.sHEIGHT + 50, Bird.sHEIGHT + 300);
+        int topTubeHeight = MathUtils.random(10, screenHeight - gap - minTubeHeight);
+        int botTubeHeight = screenHeight - gap - topTubeHeight;
+        
+        
+        
+        mSizeTopTube = new Vector2(40,topTubeHeight);
+        mSizeBotTube = new Vector2(40,botTubeHeight);
+        
+        
+        
+        mPosBotTube = new Vector2(x, 0);
+        mPosTopTube = new Vector2(x, 800- mSizeTopTube.y);
     }
 
+    // translate in x axis
+    public void translateHorizontally(float offset)
+    {
+    	mPosTopTube.x += offset;
+    	mPosBotTube.x += offset;
+    }
+    
+    
     public Texture getTopTube() {
         return mTopTube;
     }
@@ -44,5 +69,16 @@ public class Tube {
 
     public Vector2 getPosBotTube() {
         return mPosBotTube;
+    }
+    
+    
+    public Vector2 getSizeTopTube()
+    {
+    	return mSizeTopTube;
+    }
+    
+    public Vector2 getSizeBotTube()
+    {
+    	return mSizeBotTube;
     }
 }
