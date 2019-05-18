@@ -67,7 +67,7 @@ public class PlayState extends State {
         mBird.update(dt);
         
         
-        if(TimeUtils.millis() - prevTubeSpawnTime > 3000) spawnTube();
+        
     
         
         
@@ -77,15 +77,32 @@ public class PlayState extends State {
             //raindrop.y -= 200 * Gdx.graphics.getDeltaTime();
             //tube.x -= ;
             
-            tube.translateHorizontally(-200 * Gdx.graphics.getDeltaTime());
+            float tubeHorizontalVel = 200;
+            
+            
+            
+            
+            	
+            if(TimeUtils.millis() - prevTubeSpawnTime > 3000) spawnTube();
+            
+            
+            
+            tube.translateHorizontally(-tubeHorizontalVel * Gdx.graphics.getDeltaTime());
             
            // if(raindrop.y + 64 < 0) iter.remove();
-            if(tube.getPosBotTube().x + tube.getSizeBotTube().x < 0) iter.remove();
+            if(tube.getBotTube().x + tube.getBotTube().width < 0) iter.remove();
          
 //            if(raindrop.overlaps(bucket)) {
 //               //dropSound.play();
 //               iter.remove();
 //            }
+            
+            if(mBird.overlaps(tube.getBotTube()) || mBird.overlaps(tube.getTopTube()))
+            {
+            	
+            }
+            
+            
          }
       
         
@@ -99,14 +116,14 @@ public class PlayState extends State {
         sB.setProjectionMatrix(mCam.combined);  //  use the coordinate system specified by the camera
         sB.begin();
         sB.draw(mBg, 0, 0, 480, 800);      // y = 0 is bottom left hand corner
-        sB.draw(mBird.getTexture(), mBird.getPosition().x, mBird.getPosition().y, mBird.sWIDTH, mBird.sHEIGHT);
+        sB.draw(mBird.getTexture(), mBird.x, mBird.y, mBird.width, mBird.height);
 
         
         for (Iterator<Tube> iter = mTube.iterator(); iter.hasNext(); ) {
             Tube tube = iter.next();
             
-            sB.draw(tube.getTopTube(), tube.getPosTopTube().x, tube.getPosTopTube().y, tube.getSizeTopTube().x, tube.getSizeTopTube().y);
-            sB.draw(tube.getBotTube(), tube.getPosBotTube().x, tube.getPosBotTube().y, tube.getSizeBotTube().x, tube.getSizeBotTube().y);
+            sB.draw(tube.getTopTube().getTexture(), tube.getTopTube().x, tube.getTopTube().y, tube.getTopTube().width, tube.getTopTube().height);
+            sB.draw(tube.getBotTube().getTexture(), tube.getBotTube().x, tube.getBotTube().y, tube.getBotTube().width, tube.getBotTube().height);
             
         }
         

@@ -7,4 +7,18 @@ public class Sprite extends Rectangle{
 
 	protected Texture tex;
 	
+	
+
+	
+	
+	public void setTexture(String internalPath)
+	{
+		tex = new Texture(internalPath);
+	}
+	
+	public Texture getTexture()
+	{
+		return tex;
+	}
+	
 }
