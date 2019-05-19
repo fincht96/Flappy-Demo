@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.finch.game.FlappyDemo;
+import com.finch.machine.learning.Brain;
 
 
 /**
@@ -22,7 +23,7 @@ public class Bird extends Sprite{
   
     private Vector3 mVelocity;
   
-    
+    private Brain brain;
 
 
     
@@ -38,6 +39,8 @@ public class Bird extends Sprite{
         
         this.width = sWIDTH;
         this.height = sHEIGHT;
+        
+        brain = new Brain();
 
     }
 
@@ -64,6 +67,9 @@ public class Bird extends Sprite{
             this.y = FlappyDemo.sHEIGHT - Bird.sHEIGHT;
         }
         
+        
+        
+        
     }
 
 
@@ -72,6 +78,11 @@ public class Bird extends Sprite{
         mVelocity.y = 250;
     }
     
+    
+    public Brain getBrain()
+    {
+    	return brain;
+    }
     
 
 
