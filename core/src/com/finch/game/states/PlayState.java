@@ -1,22 +1,22 @@
 package com.finch.game.states;
 
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Vector2;
+
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
-import com.finch.game.FlappyDemo;
+
 import com.finch.game.sprites.Bird;
 import com.finch.game.sprites.Tube;
-import com.finch.neuralnet.Matrix;
-import com.finch.neuralnet.NeuralNet;
+
 
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import javax.xml.soap.Text;
+
 
 
 /**
@@ -25,7 +25,7 @@ import javax.xml.soap.Text;
 
 public class PlayState extends State {
 
-    private Bird mBird;
+    //private Bird mBird;
    
     private Texture mBg;
     private Array<Tube> mTube;
@@ -39,7 +39,7 @@ public class PlayState extends State {
     
     private void spawnTube()
     {
-    	mTube.add(new Tube( MathUtils.random(480, 780)));
+    	mTube.add(new Tube( MathUtils.random(480, 720)));
     	prevTubeSpawnTime = TimeUtils.millis();
     }
     
@@ -50,19 +50,18 @@ public class PlayState extends State {
         
         mBirds = new ArrayList<Bird>();
         
-        for(int i = 0; i < 100; i++)
+        for(int i = 0; i < 150; i++)
         {
         	mBirds.add(new Bird(50,300));
         }
         
-        mBird = new Bird(50,300);		// draws bird at positio (50,300)
  
 
         
-        //mCam.setToOrtho(false, FlappyDemo.sWIDTH/2,FlappyDemo.sHEIGHT/2);
+      
         mCam.setToOrtho(false, 480,800);
         mBg = new Texture("bg1.png");
-        //mTube = new Tube(120);
+        
 
         mTube = new Array<Tube>();
         spawnTube();
@@ -88,39 +87,44 @@ public class PlayState extends State {
         double yBird = 0.0;
         
         
-        
-        
-        
-        if(!mTube.isEmpty())
-        {
-             yTopTube = mTube.get(0).getTopTube().y;
-             yBotTube = mTube.get(0).getBotTube().y + mTube.get(0).getBotTube().height;
-             xTube = mTube.get(0).getBotTube().x;
-             yBird = mBird.y;
+        for (Iterator<Tube> iter = mTube.iterator(); iter.hasNext(); ) {
+            Tube tube = iter.next();
+            
+            yTopTube = tube.getTopTube().y;
+            yBotTube = tube.getBotTube().y + tube.getBotTube().height;
+            xTube = tube.getBotTube().x;
+            
         }
+        
+        
+
         
        
-        
-        
-        
-        ArrayList<Double> inputs = new ArrayList<Double>();
-    	inputs.add(yTopTube);
-		inputs.add(yBotTube);
-    	inputs.add(xTube);
-		inputs.add(yBird);
-		
-    
-        
-		
-		double resultDouble = mBird.getBrain().predict(inputs);
-		
-        if(resultDouble > 0.5)
-        {
-        	mBird.jump();
-        }
-        
-        System.out.println(Double.toString(resultDouble));
-       // Matrix.print(result);
+       for (Iterator<Bird> iter = mBirds.iterator(); iter.hasNext(); ) {
+           Bird bird = iter.next();
+           
+
+           
+           yBird = bird.y;
+       	
+           	ArrayList<Double> inputs = new ArrayList<Double>();
+       		inputs.add(yTopTube);
+       		inputs.add(yBotTube);
+       		inputs.add(xTube);
+       		inputs.add(yBird);
+       	
+       		double resultDouble = bird.getBrain().predict(inputs);
+       	
+       		if(resultDouble > 0.5)
+       		{
+       			bird.jump();
+       		}
+           
+       		System.out.println(Double.toString(resultDouble));
+           
+       }
+       
+
      
         
       
@@ -129,12 +133,26 @@ public class PlayState extends State {
     @Override
     public void update(float dt) {
         handleInput();
-        mBird.update(dt);
+        
+        
 
         
         
+        for (Iterator<Bird> iter = mBirds.iterator(); iter.hasNext(); ) {
+            	Bird bird = iter.next();
+            
+ 
+            	bird.update(dt);
+
+            
+                
+            }
+            
+
+            
         
-	
+        
+        
         
         
         if(TimeUtils.millis() - prevTubeSpawnTime > 3000) spawnTube();
@@ -144,28 +162,29 @@ public class PlayState extends State {
         for (Iterator<Tube> iter = mTube.iterator(); iter.hasNext(); ) {
             Tube tube = iter.next();
             
-            //raindrop.y -= 200 * Gdx.graphics.getDeltaTime();
-            //tube.x -= ;
             
-            tube.translateHorizontally(-200 * Gdx.graphics.getDeltaTime());
+            tube.translateHorizontally(-150 * Gdx.graphics.getDeltaTime());
             
-           // if(raindrop.y + 64 < 0) iter.remove();
+   
             if(tube.getBotTube().x + tube.getBotTube().width < 0)
             {
             	iter.remove();
             }
+            
+            
+            for (Iterator<Bird> iterBird = mBirds.iterator(); iterBird.hasNext(); ) {
+                Bird bird = iterBird.next();
+                
+     
+                	if(bird.overlaps(tube.getBotTube()) || bird.overlaps(tube.getTopTube()))
+                	{
+                		iterBird.remove();
+                	}
+
+                
+                    
+                }
          
-//            if(raindrop.overlaps(bucket)) {
-//               //dropSound.play();
-//               iter.remove();
-//            }
-            
-            if(mBird.overlaps(tube.getBotTube()) || mBird.overlaps(tube.getTopTube()))
-            {
-            	System.out.println("Collision!!!");
-            }
-            
-            
          }
       
         
@@ -179,7 +198,15 @@ public class PlayState extends State {
         sB.setProjectionMatrix(mCam.combined);  //  use the coordinate system specified by the camera
         sB.begin();
         sB.draw(mBg, 0, 0, 480, 800);      // y = 0 is bottom left hand corner
-        sB.draw(mBird.getTexture(), mBird.x, mBird.y, mBird.width, mBird.height);
+        
+        
+        for (Iterator<Bird> iter = mBirds.iterator(); iter.hasNext(); ) {
+            Bird bird = iter.next();
+            
+            sB.draw(bird.getTexture(), bird.x, bird.y, bird.width, bird.height);
+            
+        }
+        
  
         
         for (Iterator<Tube> iter = mTube.iterator(); iter.hasNext(); ) {
