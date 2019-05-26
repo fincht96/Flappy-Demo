@@ -1,6 +1,7 @@
 package com.finch.game.sprites;
 
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
 
 import com.finch.game.FlappyDemo;
@@ -13,7 +14,7 @@ import com.finch.game.FlappyDemo;
 
 public class Tube{
 
-	
+	private static Texture tex = new Texture("tube.png");
 	private Sprite topTube, botTube;
 	
 
@@ -25,8 +26,8 @@ public class Tube{
         botTube = new Sprite();
         
         
-        topTube.setTexture("tube.png");
-        botTube.setTexture("tube.png");
+        topTube.setTexture(tex);
+        botTube.setTexture(tex);
         
         int minTubeHeight = 50;
 
@@ -77,6 +78,13 @@ public class Tube{
     	return botTube;
     }
     
-    
+    public void dispose()
+    {
+    	tex.dispose();
+    	topTube.dispose();
+    	botTube.dispose();
+    	
+    }
 
+   
 }

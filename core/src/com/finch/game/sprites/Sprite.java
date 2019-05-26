@@ -11,14 +11,19 @@ public class Sprite extends Rectangle{
 
 	
 	
-	public void setTexture(String internalPath)
+	public void setTexture(Texture tex)
 	{
-		tex = new Texture(internalPath);
+		this.tex = tex;
 	}
 	
 	public Texture getTexture()
 	{
 		return tex;
+	}
+	
+	public void dispose()
+	{
+		tex.dispose();
 	}
 	
 }
