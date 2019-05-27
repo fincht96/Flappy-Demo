@@ -1,20 +1,16 @@
 package com.finch.game.states;
 
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.Input.Keys;
+
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.TimeUtils;
 import com.finch.game.FlappyDemo;
 import com.finch.game.sprites.Bird;
 import com.finch.game.sprites.Tube;
-import com.finch.machine.learning.Brain;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -28,7 +24,7 @@ import java.util.Iterator;
 
 public class PlayState extends State {
 
-	private static int GEN_SIZE =1500 ;
+	private static int GEN_SIZE = 1000 ;
 	
 	
 	BitmapFont font = new BitmapFont();
@@ -41,10 +37,11 @@ public class PlayState extends State {
     
    
     private ArrayList<Bird> mBirds;
+    private ArrayList<Bird> mSavedBirds;
     private int generation = 0;
-    private Bird bestBird;
     double yBird = 0;
-   
+    
+    private long highestScore = 0;   
 //    private void spawnEqualGeneration()
 //    {
 //    	Brain brain = new Brain();
@@ -67,59 +64,33 @@ public class PlayState extends State {
     {
     	
     	
+
+    	
+    	
+    	
     	++generation;
         for(int i = 0; i < GEN_SIZE; i++)
         {
-        	Bird newBird = new Bird(50,300);
-        	newBird.id = i;
+        	Bird newBird = new Bird(30,500);
         	mBirds.add(newBird);
         }
         
         
-        
-        //System.out.println(Integer.toString(mBirds.size()));
+       
     }
     
     
     private void spawnNewGeneration(Bird parent) 
     {
-    	Brain brain = parent.getBrain();
     	
-    	
-    	
-    	++generation;
         for(int i = 0; i < GEN_SIZE; i++)
         {
-        		Bird offspring = new Bird(30,500);
-        	
-        	
-				Brain newBrain = new Brain(brain);
-				
-				
-				float prob = MathUtils.random(0.00f,1.0f);
-				
-//				if(prob < 0.5)
-//				{
-//					//newBrain = new Brain();
-//				}
-				
-				
-				newBrain.mutate();
-	        	offspring.setBrain(newBrain);
-	        	
+        		Bird offspring = new Bird(parent);
+				offspring.mutate();
 	        	mBirds.add(offspring);
-			
         }
-        
-        for(int i = 0; i < 100; i++)
-        {
-        		Bird offspring = new Bird(30,500);
-        	
-	        	
-	        	mBirds.add(offspring);
-			
-        }
- 
+        ++generation;
+
     }
     
     
@@ -136,6 +107,7 @@ public class PlayState extends State {
         
         
         mBirds = new ArrayList<Bird>();
+        mSavedBirds = new ArrayList<Bird>();
         spawnNewGeneration();
         
         
@@ -143,7 +115,7 @@ public class PlayState extends State {
         spawnTube();
         
         
-        bestBird = new Bird(0,0);
+     
         
 
     }
@@ -188,7 +160,7 @@ public class PlayState extends State {
 	        	for (Iterator<Tube> iter = mTube.iterator(); iter.hasNext(); ) {
 	                Tube tube = iter.next();
 	                
-	                if(tube.getBotTube().x < 300)
+	                if(tube.getBotTube().x < 200)
 	                {
 	                	spawnTube();
 	                }
@@ -204,7 +176,7 @@ public class PlayState extends State {
             Tube tube = iter.next();
             
             
-	        tube.translateHorizontally(-200 * dt);
+	        tube.translateHorizontally(-250 * dt);
 	            
 	   
 	        if(tube.getBotTube().x + tube.getBotTube().width < 0)
@@ -235,6 +207,8 @@ public class PlayState extends State {
 		      		  // if collision has occurred remove bird
 		          	  if(bird.overlaps(tube.getBotTube()) || bird.overlaps(tube.getTopTube()))
 		          	  {
+		          		  // saves the deleted bird
+		          		  mSavedBirds.add(new Bird(bird));
 		          		  iter.remove();
 		          	  }
 		      	  }
@@ -255,7 +229,7 @@ public class PlayState extends State {
 //	            
 //	       		System.out.println("prediction: " + Double.toString(output));
 //	       		System.out.println("pop size: " + Integer.toString(mBirds.size()));
-	       		System.out.println("Highest fitness: " + Long.toString(bestBird.getFitness()));
+//	       		System.out.println("Highest fitness: " + Long.toString(bestBird.getFitness()));
 	       		
 	       		
 //	       		// bird makes a decision
@@ -323,18 +297,21 @@ public class PlayState extends State {
 	       		bird.update(dt);
 	       		
 	       		
+	       		
+	       		
+	       		if(bird.getScore() > highestScore)
+	       		{
+	       			highestScore = bird.getScore();
+	       			//System.out.println("High score: " + highestScore);
+	       		}
+	       		
+	       		
+	       		
+	       		
 //	       		System.out.println("Bird prediction: " + bird.getBrain().predict(inputs));
 //	       		System.out.println("Bird y: " + bird.y);
 	       		
-		      	if(bird.getFitness() > bestBird.getFitness())
-		      	{
-		      		 try {
-						bestBird = (Bird) bird.clone();
-					} catch (CloneNotSupportedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-		      	  }
+
 	      }
 	      
 
@@ -356,24 +333,71 @@ public class PlayState extends State {
 
       
       // if no birds left, spawn new generation
-      if(mBirds.size() == 0)
+      if(mBirds.isEmpty())
       {
-    	  //System.out.println(Integer.toString(mBirds.size()));
+
     	  mTube.clear();
     	  spawnTube();
     	  
-    
-    	  spawnNewGeneration(bestBird);
-    	  //spawnNewGeneration();
-    	  //spawnEqualGeneration();
-      }
+	      // calculate total score
+	      long totalScore = 0;
+	      for(Iterator<Bird> iter = mSavedBirds.iterator(); iter.hasNext(); )
+	      {
+	      	Bird bird = iter.next();
+	      	totalScore += bird.getScore();
+	      }
+	      	
+	      // calculate fitness of each bird
+	      for(Iterator<Bird> iter = mSavedBirds.iterator(); iter.hasNext(); )
+	      {
+	      	Bird bird = iter.next();
+	      	
+	      	double fitness = (double)bird.getScore()/totalScore;
+	      	bird.setFitness((double)bird.getScore()/totalScore); 
+	      }
+	    	  
+	    	  
+	    
+	      Bird newBird = new Bird(pickOne());
+	      
+	    	  
+	      spawnNewGeneration(newBird);
+
+	     }
       
 
 
       
     }
     
-    /*
+    private Bird pickOne() {
+		
+    	// creates a random bird with fitness = 0
+    	Bird bestBird = new Bird(0,0);
+    	
+    	// find bird with highest fitness
+	    for(Iterator<Bird> iter = mSavedBirds.iterator(); iter.hasNext(); )
+	    {
+	    	Bird bird = iter.next();
+	    	
+	    	if(bird.getFitness() > bestBird.getFitness())
+	    	{
+	    		bestBird = new Bird(bird);
+	    	}
+	     }
+    	
+    	// deletes the saved birds
+    	mSavedBirds.clear();
+    	
+    	// reset the birds score and fitness
+    	bestBird.setFitness(0.0);
+    	bestBird.setScore(0);
+    	
+		return new Bird(bestBird);
+	}
+
+
+	/*
      * Draws the entire scene
      */
     @Override
@@ -401,8 +425,10 @@ public class PlayState extends State {
         }
         
         
-        font.draw(sB, "Gen: " + generation, FlappyDemo.sWIDTH - 100, FlappyDemo.sHEIGHT - 20);
-        
+        font.draw(sB, "Gen: " + generation, FlappyDemo.sWIDTH - 150, FlappyDemo.sHEIGHT - 20);
+        font.draw(sB, "HighScore: " + highestScore, FlappyDemo.sWIDTH - 150, FlappyDemo.sHEIGHT - 50);
+        font.draw(sB, "Current Score: " + mBirds.iterator().next().getScore(), FlappyDemo.sWIDTH - 150, FlappyDemo.sHEIGHT - 80);
+        font.draw(sB, "Pop size: " + mBirds.size(), FlappyDemo.sWIDTH - 150, FlappyDemo.sHEIGHT - 110);
         
         sB.end();
     }

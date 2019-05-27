@@ -42,15 +42,15 @@ public class Brain{
 				
 				int prob = MathUtils.random(0, 100);
 				
-				if(prob < 1)
+				if(prob < 2)
 				{
 					newVal *= MathUtils.random(0.50f, 1.50f);
 				}
 				
 				
-				if(prob < 5)
+				if(prob < 4)
 				{
-					newVal *= MathUtils.random(0.95f, 1.05f);
+					newVal *= MathUtils.random(0.98f, 1.02f);
 				}
 				
 				

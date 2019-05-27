@@ -19,7 +19,7 @@ import com.finch.machine.learning.Brain;
  *  Created by Thomas on 19/03/2019
  */
 
-public class Bird extends Sprite implements Cloneable{
+public class Bird extends Sprite{
     /**
 	 * 
 	 */
@@ -35,7 +35,8 @@ public class Bird extends Sprite implements Cloneable{
   
     private Brain brain;
 
-    private long fitness = 0;
+    private long score = 0;
+    private double fitness = 0;
     
     
     
@@ -58,6 +59,22 @@ public class Bird extends Sprite implements Cloneable{
     }
     
 
+    public Bird(Bird bird)
+    {
+    	this.brain = new Brain(bird.brain);
+    	this.score = bird.score;
+    	this.fitness = bird.fitness;
+    	this.mVelocity = new Vector3(0,0,0);
+    	this.height = bird.height;
+    	this.width = bird.width;
+    	this.x = bird.x;
+    	this.y = bird.y;
+    	this.tex = bird.tex;
+    	
+    	
+    	
+    }
+    
 
     public void update(float dt)
     {
@@ -83,7 +100,7 @@ public class Bird extends Sprite implements Cloneable{
         }
         
         
-        ++fitness;
+        ++score;
         
     }
 
@@ -101,13 +118,13 @@ public class Bird extends Sprite implements Cloneable{
     
     public void jump()
     {
-        mVelocity.y = 250;
+        mVelocity.y = 350;
     }
     
     
     public Brain getBrain()
     {
-    	return brain;
+    	return new Brain(brain);
     }
     
     public void setBrain(Brain b)
@@ -115,23 +132,30 @@ public class Bird extends Sprite implements Cloneable{
     	brain = b;
     }
     
-    public long getFitness()
+    public double getFitness()
     {
     	return fitness;
     }
     
-    public void setFitness(long fitness)
+    public void setFitness(double fitness)
     {
     	this.fitness = fitness;
     }
 
-  
+    public long getScore()
+    {
+    	return this.score;
+    }
     
+    public void setScore(long score)
+    {
+    	this.score = score;
+    }
     
-    public Object clone()throws CloneNotSupportedException{  
-    	return super.clone();  
-    	}
-
+    public void mutate()
+    {
+    	this.brain.mutate();
+    }
 
 
 
