@@ -28,7 +28,7 @@ import java.util.Iterator;
 
 public class PlayState extends State {
 
-	private static int GEN_SIZE =800 ;
+	private static int GEN_SIZE =1500 ;
 	
 	
 	BitmapFont font = new BitmapFont();
@@ -45,21 +45,21 @@ public class PlayState extends State {
     private Bird bestBird;
     double yBird = 0;
    
-    private void spawnEqualGeneration()
-    {
-    	Brain brain = new Brain();
-    	
-    	++generation;
-        for(int i = 0; i < GEN_SIZE; i++)
-        {
-        	Bird newBird = new Bird(50,300);
-        	newBird.setBrain(brain);
-        	newBird.y = 50;//MathUtils.random(500, 720);
-        	newBird.id = i;
-        	mBirds.add(newBird);
-        }
-
-    }
+//    private void spawnEqualGeneration()
+//    {
+//    	Brain brain = new Brain();
+//    	
+//    	++generation;
+//        for(int i = 0; i < GEN_SIZE; i++)
+//        {
+//        	Bird newBird = new Bird(50,300);
+//        	newBird.setBrain(brain);
+//        	newBird.y = 50;//MathUtils.random(500, 720);
+//        	newBird.id = i;
+//        	mBirds.add(newBird);
+//        }
+//
+//    }
     
     
     
@@ -75,6 +75,8 @@ public class PlayState extends State {
         	mBirds.add(newBird);
         }
         
+        
+        
         //System.out.println(Integer.toString(mBirds.size()));
     }
     
@@ -85,66 +87,39 @@ public class PlayState extends State {
     	
     	
     	
-    	
-    	
-    	
     	++generation;
-        for(int i = 0; i < 100; i++)
+        for(int i = 0; i < GEN_SIZE; i++)
         {
-        	Bird offspring = new Bird(30,500);
+        		Bird offspring = new Bird(30,500);
         	
         	
-        	try {
-				Brain newBrain = (Brain) brain.clone();
+				Brain newBrain = new Brain(brain);
 				
 				
 				float prob = MathUtils.random(0.00f,1.0f);
 				
-				if(prob < 0.5)
-				{
-					//newBrain = new Brain();
-				}
+//				if(prob < 0.5)
+//				{
+//					//newBrain = new Brain();
+//				}
 				
 				
 				newBrain.mutate();
 	        	offspring.setBrain(newBrain);
 	        	
 	        	mBirds.add(offspring);
-				
-				
-			} catch (CloneNotSupportedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-        	
-        	
-
-        	
-        	
-//        	try {
-//				Bird offspring = (Bird) parent.clone();
-//				//offspring.setFitness(0);
-//				offspring.x = 50;
-//				offspring.y = 300;
-//				
-//				
-//				//offspring.getBrain().mutate();
-//				
-//
-//						
-//				
-//				mBirds.add(offspring);
-//				
-//			} catch (CloneNotSupportedException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-		
-        
-
+			
         }
         
-      //System.out.println("New gen created"); 
+        for(int i = 0; i < 100; i++)
+        {
+        		Bird offspring = new Bird(30,500);
+        	
+	        	
+	        	mBirds.add(offspring);
+			
+        }
+ 
     }
     
     
@@ -280,7 +255,7 @@ public class PlayState extends State {
 //	            
 //	       		System.out.println("prediction: " + Double.toString(output));
 //	       		System.out.println("pop size: " + Integer.toString(mBirds.size()));
-//	       		System.out.println("Highest fitness: " + Long.toString(bestBird.getFitness()));
+	       		System.out.println("Highest fitness: " + Long.toString(bestBird.getFitness()));
 	       		
 	       		
 //	       		// bird makes a decision
@@ -348,8 +323,8 @@ public class PlayState extends State {
 	       		bird.update(dt);
 	       		
 	       		
-	       		System.out.println("Bird prediction: " + bird.getBrain().predict(inputs));
-	       		System.out.println("Bird y: " + bird.y);
+//	       		System.out.println("Bird prediction: " + bird.getBrain().predict(inputs));
+//	       		System.out.println("Bird y: " + bird.y);
 	       		
 		      	if(bird.getFitness() > bestBird.getFitness())
 		      	{

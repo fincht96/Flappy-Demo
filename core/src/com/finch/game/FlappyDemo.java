@@ -33,37 +33,30 @@ public class FlappyDemo extends ApplicationAdapter {
 		
 		
 		
-		Brain parent = new Brain();
-		Brain unmodifiedChild = new Brain();
-		Brain modifiedChild = new Brain();
-		
-		try {
-			unmodifiedChild = (Brain) parent.clone();
-			modifiedChild = (Brain) parent.clone();
-			
-		} catch (CloneNotSupportedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		
-		modifiedChild.mutate();
-		
-		ArrayList<Double> inputs = new ArrayList<Double>();
-		
-		inputs.add(0.1);
-		inputs.add(0.18);
-		inputs.add(0.5);
-		inputs.add(0.5);
-		
-		double parentPredic = parent.predict(inputs);
-		double unmodChildPredic = unmodifiedChild.predict(inputs);
-		double modChildPredic = modifiedChild.predict(inputs);
-		
-		
-		System.out.println("Parent predicition: " + Double.toString(parentPredic));
-		System.out.println("Unmodified Child predicition: " + Double.toString(unmodChildPredic));
-		System.out.println("Modified Child predicition: " + Double.toString(modChildPredic));
+//		Brain parent = new Brain();
+//		Brain unmodifiedChild = new Brain(parent);
+//		Brain modifiedChild = new Brain(parent);
+//		
+//	
+//		
+//		
+//		modifiedChild.mutate();
+//		
+//		ArrayList<Double> inputs = new ArrayList<Double>();
+//		
+//		inputs.add(0.1);
+//		inputs.add(0.18);
+//		inputs.add(0.5);
+//		inputs.add(0.5);
+//		
+//		double parentPredic = parent.predict(inputs);
+//		double unmodChildPredic = unmodifiedChild.predict(inputs);
+//		double modChildPredic = modifiedChild.predict(inputs);
+//		
+//		
+//		System.out.println("Parent predicition: " + Double.toString(parentPredic));
+//		System.out.println("Unmodified Child predicition: " + Double.toString(unmodChildPredic));
+//		System.out.println("Modified Child predicition: " + Double.toString(modChildPredic));
 		
 		
 	}
@@ -72,7 +65,7 @@ public class FlappyDemo extends ApplicationAdapter {
 	public void render () {
 		
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);		// wipes screen
-//		mGsm.update(Gdx.graphics.getDeltaTime());
+		mGsm.update(Gdx.graphics.getDeltaTime());
 		mGsm.render(mSb);
 		
 
